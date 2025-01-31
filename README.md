@@ -76,3 +76,249 @@ Criação da estrutura básica da página com campos de entrada, botões e lista
     <script src="app.js" defer></script>
 </body>
 </html>
+
+### 2. Estilização com CSS
+
+Estilização dos elementos da página, incluindo contêiner da lista com bordas arredondadas e cor azul pastel.
+
+```css
+:root {
+    --color-primary: #4B69FD;
+    --color-secondary: #FFF9EB;
+    --color-tertiary: #C4C4C4;
+    --color-button: #fe652b;
+    --color-button-hover: #e55720;
+    --color-text: #444444;
+    --color-white: #FFFFFF;
+    --color-green-pastel: #B7E4C7;
+}
+
+body {
+    height: 100vh;
+    background-color: var(--color-primary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.main-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+}
+
+.header-banner {
+    flex: 40%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 0 0;
+}
+
+.input-section {
+    flex: 60%;
+    background-color: var(--color-secondary);
+    border: 1px solid #000;
+    border-radius: 64px 64px 0 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    width: 100%;
+}
+
+.main-title {
+    font-size: 48px;
+    font-family: "Merriweather", serif;
+    font-weight: 900;
+    font-style: italic;
+    color: var(--color-white);
+}
+
+.section-title {
+    font-family: "Inter", serif;
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin: 10px 0;
+    text-align: center;
+}
+
+.input-wrapper {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    max-width: 600px;
+    margin-top: 20px;
+}
+
+.input-name {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #000;
+    border-radius: 25px 0 0 25px;
+    font-size: 16px;
+}
+
+.button-container {
+    width: 300px;
+    justify-content: center;
+}
+
+button {
+    padding: 15px 30px;
+    font-family: "Inter", sans-serif;
+    font-size: 16px;
+    border: 2px solid #000;
+    border-radius: 25px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+}
+
+.button-add {
+    background-color: var(--color-tertiary);
+    color: var(--color-text);
+    border-radius: 0 25px 25px 0;
+}
+
+.button-add:hover {
+    background-color: #a1a1a1;
+}
+
+.lista-container {
+    width: 100%;
+    max-width: 600px;
+    background-color: var(--color-white);
+    border: 2px solid var(--color-green-pastel);
+    border-radius: 15px;
+    margin-top: 20px;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+ul {
+    list-style-type: none;
+    color: var(--color-text);
+    font-family: "Inter", sans-serif;
+    font-size: 18px;
+    margin: 0;
+    padding: 0;
+}
+
+.name-list li {
+    padding: 5px 0;
+}
+
+.result-list {
+    margin-top: 15px;
+    color: #05DF05;
+    font-size: 22px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.button-draw {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 10px 40px;
+    color: var(--color-white);
+    background-color: var(--color-button);
+    font-size: 16px;
+}
+
+.button-draw img {
+    margin-right: 40px;
+}
+
+.button-draw:hover {
+    background-color: var(--color-button-hover);
+}
+
+### 3. Implementação com JavaScript
+
+Criação das funções para adicionar amigos, validar entradas, atualizar a lista, sortear amigos e acionar o botão "Adicionar" com a tecla "Enter".
+
+```JavaScript
+// Array para armazenar os nomes
+let amigos = [];
+
+// Função para validar a entrada, permitindo apenas letras, espaços, e combinações dos símbolos ´ ^ ~ ç com vogais
+function validarEntrada(nome) {
+    const regex = /^[A-Za-z\sáéíóúâêîôûãõçÁÉÍÓÚÂÊÎÔÛÃÕ]+$/; // Permite letras, espaços e combinações de símbolos com vogais
+    return regex.test(nome);
+}
+
+// Função para adicionar um amigo à lista
+function adicionarAmigo() {
+    const input = document.getElementById('amigo');
+    const nomeAmigo = input.value.trim(); // Remove espaços extras
+
+    if (!validarEntrada(nomeAmigo)) {
+        alert("Por favor, insira um nome válido (apenas letras, espaços e combinações dos símbolos ´ ^ ~ ç com vogais).");
+        input.value = ""; // Limpa o campo de entrada
+        return;
+    }
+
+    if (nomeAmigo === "") {
+        alert("Por favor, insira um nome válido.");
+        return;
+    }
+
+    // Adiciona o nome ao array e atualiza a lista na página
+    amigos.push(nomeAmigo);
+    atualizarLista();
+    input.value = ""; // Limpa o campo de entrada
+}
+
+// Função para agregar múltiplos amigos à lista
+function agregarAmigos() {
+    const input = document.getElementById('amigos');
+    const nomesAmigos = input.value.trim().split(',');
+
+    nomesAmigos.forEach(nome => {
+        const nomeTrim = nome.trim();
+        if (nomeTrim !== "" && validarEntrada(nomeTrim)) {
+            amigos.push(nomeTrim);
+        } else if (nomeTrim !== "") {
+            alert(`"${nomeTrim}" não é um nome válido. Por favor, insira apenas letras, espaços e combinações dos símbolos ´ ^ ~ ç com vogais.`);
+        }
+    });
+
+    atualizarLista();
+    input.value = ""; // Limpa o campo de entrada
+}
+
+// Função para atualizar a lista visível na página
+function atualizarLista() {
+    const lista = document.getElementById('listaAmigos');
+    lista.innerHTML = ""; // Limpa a lista
+
+    amigos.forEach((amigo, index) => {
+        const listItem = document.createElement('li');
+        listItem.textContent = amigo;
+        lista.appendChild(listItem);
+    });
+}
+
+// Função para sortear um amigo secreto
+function sortearAmigo() {
+    if (amigos.length === 0) {
+        alert("A lista está vazia. Adicione nomes antes de sortear.");
+        return;
+    }
+
+    const sorteadoIndex = Math.floor(Math.random() * amigos.length);
+    const amigoSorteado = amigos[sorteadoIndex];
+
+    const resultado = document.getElementById('resultado');
+    resultado.textContent = `O amigo secreto é: ${amigoSorteado}`;
+}
+
+// Adicionar event listener para acionar o botão "Adicionar" ao pressionar "Enter"
+document.getElementById('amigo').addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+        adicionarAmigo();
+    }
+});
